@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dajian.mapper.GoodsMapper">
+    <resultMap id="baseMap" type="com.dajian.entity.Goods">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="price" column="price" jdbcType="VARCHAR"/>
+        <result property="image" column="image" jdbcType="VARCHAR"/>
+        <result property="brand" column="brand" jdbcType="VARCHAR"/>
+    </resultMap>
+    <!--    查询所有-->
+    <select id="findAll" resultType="com.dajian.entity.Goods">
+        SELECT  * FROM tb_goods
+    </select>
+    <!--    更新-->
+    <update id="update" parameterType="com.dajian.entity.Goods">
+        UPDATE  tb_goods
+        <set>
+            <if test="title!=null">
+                title = #{title},
+            </if>
+            <if test="price!=null">
+                price = #{price},
+            </if><if test="image!=null">
+            image = #{image},
+        </if><if test="brand!=null">
+            brand = #{brand},
+        </if>
+        </set>
+
+        WHERE id=#{id}
+    </update>
+    <!--    删除-->
+    <delete id="delete" parameterType="Long">
+        DELETE FROM tb_goods WHERE id=#{id}
+    </delete>
+    <!--    添加-->
+    <insert id="create" parameterType="com.dajian.entity.Goods">
+        INSERT INTO tb_goods (title, price, image, brand)
+        VALUES (#{title}, #{price},#{image}, #{brand})
+    </insert>
+    <!--    根据ID查询-->
+    <select id="findById" parameterType="Long" resultMap="baseMap">
+        SELECT * from tb_goods WHERE id = #{id}
+    </select>
+    <!--    条件查询-->
+    <select id="findByPage" parameterType="com.dajian.entity.Goods" resultMap="baseMap">
+        SELECT * FROM tb_goods WHERE 1=1
+        <if test="brand != null">
+            AND brand LIKE CONCAT("%", #{brand}, "%")
+        </if>
+        <if test="title != null">
+            AND title LIKE CONCAT("%", #{title}, "%")
+        </if>
+    </select>
+
+</mapper>
